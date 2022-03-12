@@ -15,9 +15,9 @@ namespace HotelFinder.API.Controllers
     public class HotelsController : ControllerBase
     {
         private IHotelService _hotelService;
-        public HotelsController()
+        public HotelsController(IHotelService hotelService)
         {
-            _hotelService = new HotelManager();
+            _hotelService = hotelService;
         }
 
         /// <summary>
@@ -27,9 +27,9 @@ namespace HotelFinder.API.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public IActionResult GetAllHotels()//http://localhost:24931/api/hotels/GetAllHotels
+        public async Task<IActionResult> GetAllHotels()//http://localhost:24931/api/hotels/GetAllHotels
         {
-            var hotels = _hotelService.GetAllHotels();
+            var hotels = await _hotelService.GetAllHotels();
             return Ok(hotels); //200 + data
         }
 
@@ -41,9 +41,9 @@ namespace HotelFinder.API.Controllers
 
         [HttpGet]
         [Route("[action]/{id}")]
-        public IActionResult GetHotelById(int id)//http://localhost:24931/api/hotels/GetHotelById/2
+        public async Task<IActionResult> GetHotelById(int id)//http://localhost:24931/api/hotels/GetHotelById/2
         {
-            var hotel = _hotelService.GetHotelById(id);
+            var hotel = await _hotelService.GetHotelById(id);
             if (hotel != null)
             {
                 return Ok(hotel); //200 + data
@@ -53,9 +53,9 @@ namespace HotelFinder.API.Controllers
 
         [HttpGet]
         [Route("[action]/{name}")]
-        public IActionResult GetHotelByName(string name)//http://localhost:24931/api/hotels/GetHotelByName/alara
+        public async Task<IActionResult> GetHotelByName(string name)//http://localhost:24931/api/hotels/GetHotelByName/alara
         {
-            var hotel = _hotelService.GetHotelByName(name);
+            var hotel = await _hotelService.GetHotelByName(name);
             if (hotel != null)
             {
                 return Ok(hotel); //200 + data
@@ -65,7 +65,7 @@ namespace HotelFinder.API.Controllers
 
         [HttpGet]
         [Route("[action]/{id}/{name}")]
-        public IActionResult GetHotelByIdWithName(int id, string name)
+        public async Task<IActionResult> GetHotelByIdWithName(int id, string name)
         {
             return Ok();
         }
@@ -83,7 +83,7 @@ namespace HotelFinder.API.Controllers
 
         [HttpPost]
         [Route("[action]")] //CreateHotel=[action]
-        public IActionResult CreateHotel([FromBody]Hotel hotel)
+        public async Task<IActionResult> CreateHotel([FromBody]Hotel hotel)
         {
 
             //Validation işlemi
@@ -96,7 +96,7 @@ namespace HotelFinder.API.Controllers
             //return BadRequest(ModelState); // 400 + validation errors
 
 
-            var createdHotel = _hotelService.CreateHotel(hotel);
+            var createdHotel = await _hotelService.CreateHotel(hotel);
             return CreatedAtAction("Get", new { id = createdHotel.Id }, createdHotel); //201 + data
         }
 
@@ -108,11 +108,11 @@ namespace HotelFinder.API.Controllers
 
         [HttpPut]
         [Route("[action]")]
-        public IActionResult Put([FromBody]Hotel hotel)
+        public async Task<IActionResult> UpdateHotel([FromBody]Hotel hotel)
         {
-            if (_hotelService.GetHotelById(hotel.Id) != null)
+            if (await _hotelService.GetHotelById(hotel.Id) != null)
             {
-                return Ok(_hotelService.UpdateHotel(hotel)); //200 + data
+                return Ok(await _hotelService.UpdateHotel(hotel)); //200 + data
             }
             return NotFound();
         }
@@ -124,11 +124,11 @@ namespace HotelFinder.API.Controllers
 
         [HttpDelete]
         [Route("[action]/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_hotelService.GetHotelById(id) != null)
+            if (await _hotelService.GetHotelById(id) != null)
             {
-                _hotelService.DeleteHotel(id);
+                await _hotelService.DeleteHotel(id);
                 return Ok(); //200
             }
             return NotFound();
