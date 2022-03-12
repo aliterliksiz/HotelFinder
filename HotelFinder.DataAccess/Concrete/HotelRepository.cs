@@ -45,6 +45,24 @@ namespace HotelFinder.DataAccess.Concrete
             }
         }
 
+        public Hotel GetHotelByName(string name)
+        {
+            using (var hotelDbContext = new HotelDbContext())
+            {
+                return hotelDbContext.Hotels.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
+            }
+        }
+
+        //public Hotel GetotelByIdWithName(int id, string name)
+        //{
+        //    using (var hotelDbContext = new HotelDbContext())
+        //    {
+        //        return hotelDbContext.Hotels.
+        //    }
+        //}
+
+        //id ve name ile aramada kullanılacak bir fonksiyon yazılabilir ama query string ile kullanmak daha iyidir
+
         public Hotel UpdateHotel(Hotel hotel)
         {
             using (var hotelDbContext = new HotelDbContext())

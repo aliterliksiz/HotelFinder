@@ -38,8 +38,9 @@ namespace HotelFinder.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
 
-        [HttpGet("{id")]
-        public IActionResult Get(int id)
+        [HttpGet]
+        [Route("[action]/{id}")]
+        public IActionResult GetHotelById(int id)
         {
             var hotel = _hotelService.GetHotelById(id);
             if (hotel != null)
@@ -49,6 +50,30 @@ namespace HotelFinder.API.Controllers
             return NotFound(); //404
         }
 
+        [HttpGet]
+        [Route("[action]/{name}")]
+        public IActionResult GetHotelByName(string name)
+        {
+            var hotel = _hotelService.GetHotelByName(name);
+            if (hotel != null)
+            {
+                return Ok(hotel); //200 + data
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Route("[action]/{id}/{name}")]
+        public IActionResult GetHotelByIdWithName(int id, string name)
+        {
+            return Ok();
+        }
+        //burada id ve name ile aramak için bir fonksiyon yazdık bunu query string ile yazmak daha iyidir
+        //localhost:XXXXX/api/hotels/GetHotelByIdWithName?id=3&name=titanic
+
+
+        //Actionları artık route attribute'u ile kullanacağız
+
         /// <summary>
         /// Create a hotel
         /// </summary>
@@ -56,7 +81,8 @@ namespace HotelFinder.API.Controllers
         /// <returns></returns>
 
         [HttpPost]
-        public IActionResult Post([FromBody]Hotel hotel)
+        [Route("[action]")] //CreateHotel=[action]
+        public IActionResult CreateHotel([FromBody]Hotel hotel)
         {
 
             //Validation işlemi
@@ -80,6 +106,7 @@ namespace HotelFinder.API.Controllers
         /// <returns></returns>
 
         [HttpPut]
+        [Route("[action]")]
         public IActionResult Put([FromBody]Hotel hotel)
         {
             if (_hotelService.GetHotelById(hotel.Id) != null)
@@ -94,7 +121,8 @@ namespace HotelFinder.API.Controllers
         /// </summary>
         /// <param name="id"></param>
 
-        [HttpDelete("{id)")]
+        [HttpDelete]
+        [Route("[action]/{id}")]
         public IActionResult Delete(int id)
         {
             if (_hotelService.GetHotelById(id) != null)
