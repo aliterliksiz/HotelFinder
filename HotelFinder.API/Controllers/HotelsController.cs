@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace HotelFinder.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] // [ApiController] attribute'u validation işlemlerini kendisi yapıyor
     public class HotelsController : ControllerBase
     {
         private IHotelService _hotelService;
@@ -26,9 +26,10 @@ namespace HotelFinder.API.Controllers
         /// <returns></returns>
 
         [HttpGet]
-        public List<Hotel> Get()
+        public IActionResult Get()
         {
-            return _hotelService.GetAllHotels();
+            var hotels = _hotelService.GetAllHotels();
+            return Ok(hotels); //200 + data
         }
 
         /// <summary>
@@ -38,9 +39,14 @@ namespace HotelFinder.API.Controllers
         /// <returns></returns>
 
         [HttpGet("{id")]
-        public Hotel Get(int id)
+        public IActionResult Get(int id)
         {
-            return _hotelService.GetHotelById(id);
+            var hotel = _hotelService.GetHotelById(id);
+            if (hotel != null)
+            {
+                return Ok(hotel); //200 + data
+            }
+            return NotFound(); //404
         }
 
         /// <summary>
@@ -50,9 +56,21 @@ namespace HotelFinder.API.Controllers
         /// <returns></returns>
 
         [HttpPost]
-        public Hotel Post(Hotel hotel)
+        public IActionResult Post([FromBody]Hotel hotel)
         {
-            return _hotelService.CreateHotel(hotel);
+
+            //Validation işlemi
+
+            //if (ModelState.IsValid)
+            //{
+            //    var createdHotel = _hotelService.CreateHotel(hotel);
+            //    return CreatedAtAction("Get", new { id = createdHotel.Id }, createdHotel); //201 + data
+            //}
+            //return BadRequest(ModelState); // 400 + validation errors
+
+
+            var createdHotel = _hotelService.CreateHotel(hotel);
+            return CreatedAtAction("Get", new { id = createdHotel.Id }, createdHotel); //201 + data
         }
 
         /// <summary>
@@ -62,9 +80,13 @@ namespace HotelFinder.API.Controllers
         /// <returns></returns>
 
         [HttpPut]
-        public Hotel Put(Hotel hotel)
+        public IActionResult Put([FromBody]Hotel hotel)
         {
-            return _hotelService.UpdateHotel(hotel);
+            if (_hotelService.GetHotelById(hotel.Id) != null)
+            {
+                return Ok(_hotelService.UpdateHotel(hotel)); //200 + data
+            }
+            return NotFound();
         }
 
         /// <summary>
@@ -73,9 +95,14 @@ namespace HotelFinder.API.Controllers
         /// <param name="id"></param>
 
         [HttpDelete("{id)")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            _hotelService.DeleteHotel(id);
+            if (_hotelService.GetHotelById(id) != null)
+            {
+                _hotelService.DeleteHotel(id);
+                return Ok(); //200
+            }
+            return NotFound();
         }
     }
 }
