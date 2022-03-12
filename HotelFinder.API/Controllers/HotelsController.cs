@@ -26,7 +26,8 @@ namespace HotelFinder.API.Controllers
         /// <returns></returns>
 
         [HttpGet]
-        public IActionResult Get()
+        [Route("[action]")]
+        public IActionResult GetAllHotels()//http://localhost:24931/api/hotels/GetAllHotels
         {
             var hotels = _hotelService.GetAllHotels();
             return Ok(hotels); //200 + data
@@ -40,7 +41,7 @@ namespace HotelFinder.API.Controllers
 
         [HttpGet]
         [Route("[action]/{id}")]
-        public IActionResult GetHotelById(int id)
+        public IActionResult GetHotelById(int id)//http://localhost:24931/api/hotels/GetHotelById/2
         {
             var hotel = _hotelService.GetHotelById(id);
             if (hotel != null)
@@ -52,7 +53,7 @@ namespace HotelFinder.API.Controllers
 
         [HttpGet]
         [Route("[action]/{name}")]
-        public IActionResult GetHotelByName(string name)
+        public IActionResult GetHotelByName(string name)//http://localhost:24931/api/hotels/GetHotelByName/alara
         {
             var hotel = _hotelService.GetHotelByName(name);
             if (hotel != null)

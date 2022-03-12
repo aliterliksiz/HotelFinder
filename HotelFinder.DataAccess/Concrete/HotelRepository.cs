@@ -37,7 +37,7 @@ namespace HotelFinder.DataAccess.Concrete
             }
         }
 
-        public Hotel GetHotelById(int id)
+        public Hotel GetHotelById(int id) 
         {
             using (var hotelDbContext = new HotelDbContext())
             {
@@ -45,7 +45,7 @@ namespace HotelFinder.DataAccess.Concrete
             }
         }
 
-        public Hotel GetHotelByName(string name)
+        public Hotel GetHotelByName(string name) 
         {
             using (var hotelDbContext = new HotelDbContext())
             {

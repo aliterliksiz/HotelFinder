@@ -4,7 +4,7 @@
         <name>HotelFinder.API</name>
     </assembly>
     <members>
-        <member name="M:HotelFinder.API.Controllers.HotelsController.Get">
+        <member name="M:HotelFinder.API.Controllers.HotelsController.GetAllHotels">
             <summary>
             Get all hotels
             </summary>
@@ -17,7 +17,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:HotelFinder.API.Controllers.HotelsController.Post(HotelFinder.Entities.Hotel)">
+        <member name="M:HotelFinder.API.Controllers.HotelsController.CreateHotel(HotelFinder.Entities.Hotel)">
             <summary>
             Create a hotel
             </summary>
